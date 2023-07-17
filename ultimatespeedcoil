@@ -1,0 +1,106 @@
+
+--Converted with ttyyuu12345's model to script plugin v4
+function sandbox(var,func)
+	local env = getfenv(func)
+	local newenv = setmetatable({},{
+		__index = function(self,k)
+			if k=="script" then
+				return var
+			else
+				return env[k]
+			end
+		end,
+	})
+	setfenv(func,newenv)
+	return func
+end
+cors = {}
+mas = Instance.new("Model",game:GetService("Lighting"))
+Tool0 = Instance.new("Tool")
+Part1 = Instance.new("Part")
+Sound2 = Instance.new("Sound")
+SpecialMesh3 = Instance.new("SpecialMesh")
+Script4 = Instance.new("Script")
+Camera5 = Instance.new("Camera")
+Tool0.Name = "SpeedCoil"
+Tool0.Parent = mas
+Tool0.TextureId = "rbxassetid://1366627603"
+Tool0.Grip = CFrame.new(-3.39994735e-08, 3.39994877e-08, -0.99999994, -0.707106709, -0.707106829, 1.16108947e-15, 0.707106829, -0.707106709, 1.16108926e-15, 0, -1.64202843e-15, 1)
+Tool0.GripForward = Vector3.new(-1.1610894706901454e-15, -1.1610892589319086e-15, -1)
+Tool0.GripPos = Vector3.new(-3.399947345883447e-08, 3.399948766968919e-08, -0.9999999403953552)
+Tool0.GripRight = Vector3.new(-0.7071067094802856, 0.7071068286895752, 0)
+Tool0.GripUp = Vector3.new(-0.7071068286895752, -0.7071067094802856, -1.6420284253940327e-15)
+Tool0.ToolTip = "Speed up!"
+Part1.Name = "Handle"
+Part1.Parent = Tool0
+Part1.CFrame = CFrame.new(-13.0952148, 1.20000005, -12.8287811, -1, 0, 0, 0, 0, 1, 0, 1, 0)
+Part1.Orientation = Vector3.new(-90, -180, 0)
+Part1.Position = Vector3.new(-13.09521484375, 1.2000000476837158, -12.828781127929688)
+Part1.Rotation = Vector3.new(-90, 0, -180)
+Part1.Color = Color3.new(1, 1, 0)
+Part1.Size = Vector3.new(1.2999999523162842, 1.2999999523162842, 2.4000000953674316)
+Part1.BottomSurface = Enum.SurfaceType.Smooth
+Part1.BrickColor = BrickColor.new("New Yeller")
+Part1.Locked = true
+Part1.Material = Enum.Material.Neon
+Part1.TopSurface = Enum.SurfaceType.Smooth
+Part1.brickColor = BrickColor.new("New Yeller")
+Part1.FormFactor = Enum.FormFactor.Custom
+Part1.formFactor = Enum.FormFactor.Custom
+Sound2.Name = "CoilSound"
+Sound2.Parent = Part1
+Sound2.SoundId = "http://www.roblox.com/asset/?id=99173388"
+Sound2.Volume = 1
+SpecialMesh3.Parent = Part1
+SpecialMesh3.MeshId = "http://www.roblox.com/asset/?id=16606212"
+SpecialMesh3.Scale = Vector3.new(0.699999988079071, 0.699999988079071, 0.699999988079071)
+SpecialMesh3.MeshType = Enum.MeshType.FileMesh
+Script4.Name = "SpeedCoilMain"
+Script4.Parent = Tool0
+table.insert(cors,sandbox(Script4,function()
+--Original by StickMasterLuke, rescripted by iiMayk.
+
+local Tool = script.Parent
+local Handle = Tool:WaitForChild('Handle')
+local CoilSound = Handle:WaitForChild('CoilSound')
+local Character,Humanoid
+local RunSpeed,SpeedConnection = 600,nil
+
+Tool.Equipped:Connect(function()
+	Character = Tool.Parent
+	Humanoid = Character:WaitForChild('Humanoid')
+	
+	CoilSound:Play()
+	Humanoid.WalkSpeed = RunSpeed
+	if SpeedConnection == nil then
+		SpeedConnection = Humanoid.Changed:Connect(function()
+			if Humanoid.WalkSpeed ~= RunSpeed then
+				Humanoid.WalkSpeed = RunSpeed
+			end
+		end)
+	end
+end)
+Tool.Unequipped:Connect(function()
+	if SpeedConnection ~= nil then
+		SpeedConnection:Disconnect()
+		SpeedConnection = nil
+	end
+	Humanoid.WalkSpeed = 16
+end)
+end))
+Camera5.Name = "ThumbnailCamera"
+Camera5.Parent = Tool0
+Camera5.CFrame = CFrame.new(-57.8808746, 4.70080519, -113.48172, 0.999977767, 0.000558533007, -0.00665281154, -0, 0.996494353, 0.0836601034, 0.00667621708, -0.0836582407, 0.99647212)
+Camera5.CoordinateFrame = CFrame.new(-57.8808746, 4.70080519, -113.48172, 0.999977767, 0.000558533007, -0.00665281154, -0, 0.996494353, 0.0836601034, 0.00667621708, -0.0836582407, 0.99647212)
+Camera5.Focus = CFrame.new(-57.867569, 4.53348446, -115.47467, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+Camera5.focus = CFrame.new(-57.867569, 4.53348446, -115.47467, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+for i,v in pairs(mas:GetChildren()) do
+	v.Parent = game:GetService("Players").LocalPlayer.Backpack
+	pcall(function() v:MakeJoints() end)
+end
+mas:Destroy()
+for i,v in pairs(cors) do
+	spawn(function()
+		pcall(v)
+	end)
+end
