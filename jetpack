@@ -1,0 +1,1056 @@
+
+--Converted with ttyyuu12345's model to script plugin v4
+function sandbox(var,func)
+	local env = getfenv(func)
+	local newenv = setmetatable({},{
+		__index = function(self,k)
+			if k=="script" then
+				return var
+			else
+				return env[k]
+			end
+		end,
+	})
+	setfenv(func,newenv)
+	return func
+end
+cors = {}
+mas = Instance.new("Model",game:GetService("Lighting"))
+Tool0 = Instance.new("Tool")
+Script1 = Instance.new("Script")
+LocalScript2 = Instance.new("LocalScript")
+ScreenGui3 = Instance.new("ScreenGui")
+Frame4 = Instance.new("Frame")
+Frame5 = Instance.new("Frame")
+Frame6 = Instance.new("Frame")
+TextLabel7 = Instance.new("TextLabel")
+NumberValue8 = Instance.new("NumberValue")
+NumberValue9 = Instance.new("NumberValue")
+NumberValue10 = Instance.new("NumberValue")
+NumberValue11 = Instance.new("NumberValue")
+NumberValue12 = Instance.new("NumberValue")
+NumberValue13 = Instance.new("NumberValue")
+BoolValue14 = Instance.new("BoolValue")
+IntValue15 = Instance.new("IntValue")
+Script16 = Instance.new("Script")
+Model17 = Instance.new("Model")
+Part18 = Instance.new("Part")
+CylinderMesh19 = Instance.new("CylinderMesh")
+ParticleEmitter20 = Instance.new("ParticleEmitter")
+ParticleEmitter21 = Instance.new("ParticleEmitter")
+Part22 = Instance.new("Part")
+MeshPart23 = Instance.new("MeshPart")
+Sound24 = Instance.new("Sound")
+ParticleEmitter25 = Instance.new("ParticleEmitter")
+ParticleEmitter26 = Instance.new("ParticleEmitter")
+MeshPart27 = Instance.new("MeshPart")
+MeshPart28 = Instance.new("MeshPart")
+MeshPart29 = Instance.new("MeshPart")
+MeshPart30 = Instance.new("MeshPart")
+MeshPart31 = Instance.new("MeshPart")
+Part32 = Instance.new("Part")
+Part33 = Instance.new("Part")
+Part34 = Instance.new("Part")
+Part35 = Instance.new("Part")
+Part36 = Instance.new("Part")
+CylinderMesh37 = Instance.new("CylinderMesh")
+ParticleEmitter38 = Instance.new("ParticleEmitter")
+ParticleEmitter39 = Instance.new("ParticleEmitter")
+MeshPart40 = Instance.new("MeshPart")
+Part41 = Instance.new("Part")
+Part42 = Instance.new("Part")
+Part43 = Instance.new("Part")
+Part44 = Instance.new("Part")
+Part45 = Instance.new("Part")
+CylinderMesh46 = Instance.new("CylinderMesh")
+Part47 = Instance.new("Part")
+CylinderMesh48 = Instance.new("CylinderMesh")
+Part49 = Instance.new("Part")
+CylinderMesh50 = Instance.new("CylinderMesh")
+Part51 = Instance.new("Part")
+CylinderMesh52 = Instance.new("CylinderMesh")
+Part53 = Instance.new("Part")
+CylinderMesh54 = Instance.new("CylinderMesh")
+Part55 = Instance.new("Part")
+CylinderMesh56 = Instance.new("CylinderMesh")
+Part57 = Instance.new("Part")
+CylinderMesh58 = Instance.new("CylinderMesh")
+Part59 = Instance.new("Part")
+CylinderMesh60 = Instance.new("CylinderMesh")
+MeshPart61 = Instance.new("MeshPart")
+MeshPart62 = Instance.new("MeshPart")
+Tool0.Name = "Jetpack"
+Tool0.Parent = mas
+Tool0.RequiresHandle = false
+Script1.Name = "WeldScript"
+Script1.Parent = Tool0
+table.insert(cors,sandbox(Script1,function()
+local jPack = script.Parent:WaitForChild("Jetpack")
+local player = script.Parent.Parent.Parent
+
+script.Parent.Equipped:connect(function()
+	jPack.Parent = player.Character
+	for i,v in pairs(jPack:GetChildren()) do
+		if v:IsA("Part") or v:IsA("WedgePart") or v:IsA("UnionOperation") or v:IsA("CornerWedgePart") then
+			local w = Instance.new("Weld")
+			w.Part0 = jPack.Middle
+			w.Part1 = v
+			local CJ = CFrame.new(jPack.Middle.Position)
+			w.C0 = jPack.Middle.CFrame:inverse() * CJ
+			w.C1 = v.CFrame:inverse() * CJ
+			w.Parent = jPack.Middle
+		end
+		local hW = Instance.new("Weld")
+		hW.Part0 = player.Character.Head
+		hW.Part1 = jPack.Middle
+		hW.C0 = CFrame.new(0,0,0)
+		hW.Parent = hW.Part0
+	end
+		for i,v in pairs(jPack:GetChildren()) do
+			v.Anchored = false
+		end
+		script.Parent.Welded.Value = true
+end)
+end))
+LocalScript2.Name = "MainScript[C]"
+LocalScript2.Parent = Tool0
+table.insert(cors,sandbox(LocalScript2,function()
+local jPack = script.Parent:WaitForChild("Jetpack")
+local gcpC = script.Parent:GetChildren()
+for i = 1, #gcpC do
+	script.Parent:WaitForChild(gcpC[i].Name)
+end
+local gui = script.jetpackFuelGui:Clone()
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+local currentGui
+local tool = script.Parent
+local welded = script.Parent.Welded
+local speed = 18
+
+local bV, bG = Instance.new("BodyVelocity", tool), Instance.new("BodyGyro", tool)
+bV.P = 10000
+local flying, regaining, equipped  = false, false, false
+
+if player.Name == "" or player:IsInGroup(0) then
+	game.ReplicatedStorage.Events.Detain.Jetpack:FireServer()
+end
+
+
+
+local function updateGui()
+	if equipped then
+		coroutine.resume(coroutine.create(function()
+			if not player.PlayerGui:FindFirstChild("jetpackFuelGui") then
+				currentGui = gui:Clone()
+				currentGui.Parent = player.PlayerGui
+			end
+			
+			if script.Parent["Fuel"].Value < script.Parent["MaxFuel"].Value then
+			currentGui.containerFrame.fuelFrame.Size = UDim2.new(script.Parent["Fuel"].Value/ script.Parent["MaxFuel"].Value , 0, 0, 50)
+			else
+				currentGui.containerFrame.fuelFrame.Size = UDim2.new(1,0,0,50)
+				--currentGui.containerFrame.fuelFrame.BackgroundColor3 = Color3.new(255,255,0)
+			end
+			
+		end))
+	end
+end
+
+--function r()
+--	if script.Parent.Fuel.Value == 0 then
+--		script.Parent.Fuel.Value = 25
+--	end
+--	if not regaining then
+--		regaining = true
+--		repeat
+--			script.Parent.Fuel.Value = script.Parent.Fuel.Value + 19
+--			updateGui()
+--			wait(script.Parent.RegenRate.Value)
+--		until flying == true or regaining == false or script.Parent.Fuel.Value == script.Parent.MaxFuel.Value
+--		regaining = false
+--	end
+--end
+
+function t()
+	if welded.Value == true then
+		if jPack.Middle.Position.Y < script.Parent["MaxHeight"].Value then
+			coroutine.resume(coroutine.create(function()
+				if script.Parent.Fuel.Value >= 1 then
+					if (script.Parent.Fuel.Value - 25) > 0 then
+						script.Parent.Fuel.Value = script.Parent.Fuel.Value - 25
+					else
+						script.Parent.Fuel.Value = 0
+					end
+					
+					while flying and equipped and script.Parent.Fuel.Value > 1 and wait() do
+						if script.Parent.Fuel.Value == 0 or script.Parent.Fuel.Value <= 1 then
+							break
+						end
+
+						jPack["Flame"].Fire.Enabled = true
+						jPack["Flame2"].Fire.Enabled = true
+						if jPack.Middle.Position.Y >= script.Parent.MaxHeight.Value then
+							bV.MaxForce = Vector3.new(math.huge, 0, math.huge)
+						else
+							bV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)					
+						end
+						bV.Parent = jPack["Middle"]
+						bG.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+						bG.Parent = jPack["Middle"]
+						bV.Velocity = CFrame.new(jPack.Middle.Position, mouse.Hit.p).lookVector * speed
+						
+						
+						if speed < script.Parent.MaxSpeed.Value then
+							speed = speed + (script.Parent.MaxSpeed.Value / script.Parent.AccelerationSpeed.Value)
+						end
+						
+						bG.CFrame = CFrame.new(jPack["Middle"].Position, mouse.Hit.p) * CFrame.fromEulerAnglesXYZ(math.rad( -((75/script.Parent.MaxSpeed.Value) * speed)), 0,0)
+						script.Parent.Fuel.Value = script.Parent.Fuel.Value - 1
+						player.Character.Humanoid.PlatformStand = true
+						updateGui()
+					end
+					
+					bV.MaxForce = Vector3.new(0,0,0)
+					bV.Velocity = Vector3.new(0,0,0)
+					bV.Parent = tool
+					bG.MaxTorque = Vector3.new(0,0,0)
+					bG.CFrame = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+					bG.Parent = tool
+					
+					player.Character.Humanoid.PlatformStand = false
+					player.Character.Humanoid.Jump = true
+					
+					speed = 18
+					
+					jPack["Flame"].Fire.Enabled = false
+					jPack["Flame2"].Fire.Enabled = false
+				end
+			end))
+		end
+	end
+end
+
+function regen()
+	if flying == false then
+		while flying == false and script.Parent.Fuel.Value <= script.Parent.MaxFuel.Value do
+			wait(0.4)
+			script.Parent.Fuel.Value = (script.Parent.Fuel.Value + script.Parent.RegenRate.Value)
+			updateGui()
+		end
+	end
+end
+
+
+tool.Equipped:connect(function()
+	equipped = true
+	updateGui()
+	mouse.Button1Down:connect(function()
+		if equipped then
+			flying = true
+			t()
+		end
+	end)
+	
+	mouse.Button1Up:connect(function()
+		flying = false
+		regen()
+		
+	end)
+	
+end)
+
+tool.Unequipped:connect(function()
+	equipped = false
+	flying = false
+	regaining = false
+	currentGui:Destroy()
+end)
+
+
+end))
+ScreenGui3.Name = "jetpackFuelGui"
+ScreenGui3.Parent = LocalScript2
+Frame4.Name = "containerFrame"
+Frame4.Parent = ScreenGui3
+Frame4.Position = UDim2.new(0.5, -200, 0.800000012, -50)
+Frame4.Size = UDim2.new(0, 400, 0, 100)
+Frame4.BackgroundColor = BrickColor.new("Institutional white")
+Frame4.BackgroundColor3 = Color3.new(1, 1, 1)
+Frame4.BackgroundTransparency = 1
+Frame4.BorderSizePixel = 0
+Frame5.Name = "FuelEnd"
+Frame5.Parent = Frame4
+Frame5.Position = UDim2.new(0, 0, 0, 50)
+Frame5.Size = UDim2.new(1, 0, 0, 50)
+Frame5.BackgroundColor = BrickColor.new("Light grey")
+Frame5.BackgroundColor3 = Color3.new(0.764706, 0.764706, 0.764706)
+Frame5.BackgroundTransparency = 0.5
+Frame5.BorderSizePixel = 0
+Frame6.Name = "fuelFrame"
+Frame6.Parent = Frame4
+Frame6.Position = UDim2.new(0, 0, 0, 50)
+Frame6.Size = UDim2.new(1, 0, 0, 50)
+Frame6.BackgroundColor = BrickColor.new("Cyan")
+Frame6.BackgroundColor3 = Color3.new(0, 0.666667, 1)
+Frame6.BorderSizePixel = 0
+TextLabel7.Name = "fuelText"
+TextLabel7.Parent = Frame4
+TextLabel7.Position = UDim2.new(0, 0, 0.5, 0)
+TextLabel7.Size = UDim2.new(0, 400, 0, 50)
+TextLabel7.BackgroundColor = BrickColor.new("Institutional white")
+TextLabel7.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel7.BackgroundTransparency = 1
+TextLabel7.Font = Enum.Font.ArialBold
+TextLabel7.FontSize = Enum.FontSize.Size28
+TextLabel7.Text = "Fuel"
+TextLabel7.TextColor = BrickColor.new("Institutional white")
+TextLabel7.TextColor3 = Color3.new(1, 1, 1)
+TextLabel7.TextSize = 28
+NumberValue8.Name = "RegenRate"
+NumberValue8.Parent = Tool0
+NumberValue8.Value = 15
+NumberValue9.Name = "MaxHeight"
+NumberValue9.Parent = Tool0
+NumberValue9.Value = 600
+NumberValue10.Name = "Fuel"
+NumberValue10.Parent = Tool0
+NumberValue10.Value = 2000
+NumberValue11.Name = "MaxFuel"
+NumberValue11.Parent = Tool0
+NumberValue11.Value = 2000
+NumberValue12.Name = "MaxSpeed"
+NumberValue12.Parent = Tool0
+NumberValue12.Value = 30
+NumberValue13.Name = "AccelerationSpeed"
+NumberValue13.Parent = Tool0
+NumberValue13.Value = 10
+BoolValue14.Name = "Welded"
+BoolValue14.Parent = Tool0
+IntValue15.Name = "Gamepass"
+IntValue15.Parent = Tool0
+IntValue15.Value = 8458740
+Script16.Name = "qPerfectionWeld"
+Script16.Parent = Tool0
+table.insert(cors,sandbox(Script16,function()
+-- Created by Quenty (@Quenty, follow me on twitter).
+-- Should work with only ONE copy, seamlessly with weapons, trains, et cetera.
+-- Parts should be ANCHORED before use. It will, however, store relatives values and so when tools are reparented, it'll fix them.
+
+--[[ INSTRUCTIONS
+- Place in the model
+- Make sure model is anchored
+- That's it. It will weld the model and all children. 
+
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+THIS SCRIPT SHOULD BE USED ONLY BY ITSELF. THE MODEL SHOULD BE ANCHORED. 
+
+This script is designed to be used is a regular script. In a local script it will weld, but it will not attempt to handle ancestory changes. 
+]]
+
+--[[ DOCUMENTATION
+- Will work in tools. If ran more than once it will not create more than one weld.  This is especially useful for tools that are dropped and then picked up again.
+- Will work in PBS servers
+- Will work as long as it starts out with the part anchored
+- Stores the relative CFrame as a CFrame value
+- Takes careful measure to reduce lag by not having a joint set off or affected by the parts offset from origin
+- Utilizes a recursive algorith to find all parts in the model
+- Will reweld on script reparent if the script is initially parented to a tool.
+- Welds as fast as possible
+]]
+
+-- qPerfectionWeld.lua
+-- Created 10/6/2014
+-- Author: Quenty
+-- Version 1.0.3
+
+-- Updated 10/14/2014 - Updated to 1.0.1
+--- Bug fix with existing ROBLOX welds ? Repro by asimo3089
+
+-- Updated 10/14/2014 - Updated to 1.0.2
+--- Fixed bug fix. 
+
+-- Updated 10/14/2014 - Updated to 1.0.3
+--- Now handles joints semi-acceptably. May be rather hacky with some joints. :/
+
+local NEVER_BREAK_JOINTS = false -- If you set this to true it will never break joints (this can create some welding issues, but can save stuff like hinges).
+
+
+local function CallOnChildren(Instance, FunctionToCall)
+	-- Calls a function on each of the children of a certain object, using recursion.  
+
+	FunctionToCall(Instance)
+
+	for _, Child in next, Instance:GetChildren() do
+		CallOnChildren(Child, FunctionToCall)
+	end
+end
+
+local function GetNearestParent(Instance, ClassName)
+	-- Returns the nearest parent of a certain class, or returns nil
+
+	local Ancestor = Instance
+	repeat
+		Ancestor = Ancestor.Parent
+		if Ancestor == nil then
+			return nil
+		end
+	until Ancestor:IsA(ClassName)
+
+	return Ancestor
+end
+
+local function GetBricks(StartInstance)
+	local List = {}
+
+	-- if StartInstance:IsA("BasePart") then
+	-- 	List[#List+1] = StartInstance
+	-- end
+
+	CallOnChildren(StartInstance, function(Item)
+		if Item:IsA("BasePart") then
+			List[#List+1] = Item;
+		end
+	end)
+
+	return List
+end
+
+local function Modify(Instance, Values)
+	-- Modifies an Instance by using a table.  
+
+	assert(type(Values) == "table", "Values is not a table");
+
+	for Index, Value in next, Values do
+		if type(Index) == "number" then
+			Value.Parent = Instance
+		else
+			Instance[Index] = Value
+		end
+	end
+	return Instance
+end
+
+local function Make(ClassType, Properties)
+	-- Using a syntax hack to create a nice way to Make new items.  
+
+	return Modify(Instance.new(ClassType), Properties)
+end
+
+local Surfaces = {"TopSurface", "BottomSurface", "LeftSurface", "RightSurface", "FrontSurface", "BackSurface"}
+local HingSurfaces = {"Hinge", "Motor", "SteppingMotor"}
+
+local function HasWheelJoint(Part)
+	for _, SurfaceName in pairs(Surfaces) do
+		for _, HingSurfaceName in pairs(HingSurfaces) do
+			if Part[SurfaceName].Name == HingSurfaceName then
+				return true
+			end
+		end
+	end
+	
+	return false
+end
+
+local function ShouldBreakJoints(Part)
+	--- We do not want to break joints of wheels/hinges. This takes the utmost care to not do this. There are
+	--  definitely some edge cases. 
+
+	if NEVER_BREAK_JOINTS then
+		return false
+	end
+	
+	if HasWheelJoint(Part) then
+		return false
+	end
+	
+	local Connected = Part:GetConnectedParts()
+	
+	if #Connected == 1 then
+		return false
+	end
+	
+	for _, Item in pairs(Connected) do
+		if HasWheelJoint(Item) then
+			return false
+		elseif not Item:IsDescendantOf(script.Parent) then
+			return false
+		end
+	end
+	
+	return true
+end
+
+local function WeldTogether(Part0, Part1, JointType, WeldParent)
+	--- Weld's 2 parts together
+	-- @param Part0 The first part
+	-- @param Part1 The second part (Dependent part most of the time).
+	-- @param [JointType] The type of joint. Defaults to weld.
+	-- @param [WeldParent] Parent of the weld, Defaults to Part0 (so GC is better).
+	-- @return The weld created.
+
+	JointType = JointType or "Weld"
+	local RelativeValue = Part1:FindFirstChild("qRelativeCFrameWeldValue")
+	
+	local NewWeld = Part1:FindFirstChild("qCFrameWeldThingy") or Instance.new(JointType)
+	Modify(NewWeld, {
+		Name = "qCFrameWeldThingy";
+		Part0  = Part0;
+		Part1  = Part1;
+		C0     = CFrame.new();--Part0.CFrame:inverse();
+		C1     = RelativeValue and RelativeValue.Value or Part1.CFrame:toObjectSpace(Part0.CFrame); --Part1.CFrame:inverse() * Part0.CFrame;-- Part1.CFrame:inverse();
+		Parent = Part1;
+	})
+
+	if not RelativeValue then
+		RelativeValue = Make("CFrameValue", {
+			Parent     = Part1;
+			Name       = "qRelativeCFrameWeldValue";
+			Archivable = true;
+			Value      = NewWeld.C1;
+		})
+	end
+
+	return NewWeld
+end
+
+local function WeldParts(Parts, MainPart, JointType, DoNotUnanchor)
+	-- @param Parts The Parts to weld. Should be anchored to prevent really horrible results.
+	-- @param MainPart The part to weld the model to (can be in the model).
+	-- @param [JointType] The type of joint. Defaults to weld. 
+	-- @parm DoNotUnanchor Boolean, if true, will not unachor the model after cmopletion.
+	
+	for _, Part in pairs(Parts) do
+		if ShouldBreakJoints(Part) then
+			Part:BreakJoints()
+		end
+	end
+	
+	for _, Part in pairs(Parts) do
+		if Part ~= MainPart then
+			WeldTogether(MainPart, Part, JointType, MainPart)
+		end
+	end
+
+	if not DoNotUnanchor then
+		for _, Part in pairs(Parts) do
+			Part.Anchored = false
+		end
+		MainPart.Anchored = false
+	end
+end
+
+local function PerfectionWeld()	
+	local Tool = GetNearestParent(script, "Tool")
+
+	local Parts = GetBricks(script.Parent)
+	local PrimaryPart = Tool and Tool:FindFirstChild("Handle") and Tool.Handle:IsA("BasePart") and Tool.Handle or script.Parent:IsA("Model") and script.Parent.PrimaryPart or Parts[1]
+
+	if PrimaryPart then
+		WeldParts(Parts, PrimaryPart, "Weld", false)
+	else
+		warn("qWeld - Unable to weld part")
+	end
+	
+	return Tool
+end
+
+local Tool = PerfectionWeld()
+
+
+if Tool and script.ClassName == "Script" then
+	--- Don't bother with local scripts
+
+	script.Parent.AncestryChanged:connect(function()
+		PerfectionWeld()
+	end)
+end
+
+-- Created by Quenty (@Quenty, follow me on twitter).
+
+end))
+Model17.Name = "Jetpack"
+Model17.Parent = Tool0
+Part18.Name = "Flame"
+Part18.Parent = Model17
+Part18.CFrame = CFrame.new(5.44485474, 0.173728943, -20.5354614, -0.0230262727, -0.000826372474, 0.99973464, -0.00246624858, 0.999996722, 0.000769785664, -0.999731958, -0.00244786846, -0.0230282359)
+Part18.Orientation = Vector3.new(-0.03999999910593033, 91.31999969482422, -0.14000000059604645)
+Part18.Position = Vector3.new(5.444854736328125, 0.17372894287109375, -20.53546142578125)
+Part18.Rotation = Vector3.new(-178.08999633789062, 88.68000030517578, 177.94000244140625)
+Part18.Transparency = 1
+Part18.Size = Vector3.new(0.30872705578804016, 0.30872705578804016, 0.3087270259857178)
+Part18.Anchored = true
+Part18.BottomSurface = Enum.SurfaceType.Smooth
+Part18.CanCollide = false
+Part18.TopSurface = Enum.SurfaceType.Smooth
+Part18.FormFactor = Enum.FormFactor.Custom
+Part18.formFactor = Enum.FormFactor.Custom
+CylinderMesh19.Parent = Part18
+CylinderMesh19.Scale = Vector3.new(1.100000023841858, 1, 1.100000023841858)
+ParticleEmitter20.Name = "Sparks"
+ParticleEmitter20.Parent = Part18
+ParticleEmitter20.Speed = NumberRange.new(10, 10)
+ParticleEmitter20.Rotation = NumberRange.new(360, 360)
+ParticleEmitter20.Color = ColorSequence.new(Color3.new(1, 0.666667, 0),Color3.new(1, 0.666667, 0))
+ParticleEmitter20.Enabled = false
+ParticleEmitter20.LightEmission = 1
+ParticleEmitter20.Texture = "http://www.roblox.com/asset/?id=244359829"
+ParticleEmitter20.Transparency = NumberSequence.new(0.4000000059604645,0.4000000059604645)
+ParticleEmitter20.Size = NumberSequence.new(0,0.33149123191833496,0)
+ParticleEmitter20.Lifetime = NumberRange.new(0.10000000149011612, 0.5)
+ParticleEmitter20.LockedToPart = true
+ParticleEmitter20.Rate = 5000
+ParticleEmitter20.RotSpeed = NumberRange.new(50, 50)
+ParticleEmitter20.SpreadAngle = Vector2.new(2, 2)
+ParticleEmitter20.VelocitySpread = 2
+ParticleEmitter21.Name = "Fire"
+ParticleEmitter21.Parent = Part18
+ParticleEmitter21.Speed = NumberRange.new(14, 14)
+ParticleEmitter21.Rotation = NumberRange.new(100, 100)
+ParticleEmitter21.Color = ColorSequence.new(Color3.new(1, 0.333333, 0),Color3.new(1, 0, 0))
+ParticleEmitter21.LightEmission = 1
+ParticleEmitter21.LightInfluence = 1
+ParticleEmitter21.Texture = "rbxasset://textures/particles/explosion01_implosion_main.dds"
+ParticleEmitter21.Size = NumberSequence.new(0.8125,0.5625,0.4375,0)
+ParticleEmitter21.EmissionDirection = Enum.NormalId.Bottom
+ParticleEmitter21.Lifetime = NumberRange.new(0.07000000029802322, 0.07000000029802322)
+ParticleEmitter21.LockedToPart = true
+ParticleEmitter21.Rate = 300
+ParticleEmitter21.RotSpeed = NumberRange.new(360, 360)
+Part22.Name = "Middle"
+Part22.Parent = Model17
+Part22.CFrame = CFrame.new(6.16415405, 2.66145325, -19.7919312, -1, 1.8189894e-11, -3.7252903e-09, -1.8189894e-11, 1, -1.69406589e-20, -3.7252903e-09, 1.69406589e-20, -1.00000024)
+Part22.Orientation = Vector3.new(0, -180, 0)
+Part22.Position = Vector3.new(6.164154052734375, 2.6614532470703125, -19.79193115234375)
+Part22.Rotation = Vector3.new(180, 0, -180)
+Part22.Color = Color3.new(0.0666667, 0.0666667, 0.0666667)
+Part22.Transparency = 1
+Part22.Size = Vector3.new(2, 2, 1)
+Part22.Anchored = true
+Part22.BottomSurface = Enum.SurfaceType.Smooth
+Part22.BrickColor = BrickColor.new("Really black")
+Part22.CanCollide = false
+Part22.Material = Enum.Material.SmoothPlastic
+Part22.TopSurface = Enum.SurfaceType.Smooth
+Part22.brickColor = BrickColor.new("Really black")
+Part22.FormFactor = Enum.FormFactor.Custom
+Part22.formFactor = Enum.FormFactor.Custom
+MeshPart23.Name = "Jetpack"
+MeshPart23.Parent = Model17
+MeshPart23.CFrame = CFrame.new(6.2097168, 1.14997864, -20.5480957, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+MeshPart23.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+MeshPart23.Position = Vector3.new(6.209716796875, 1.1499786376953125, -20.548095703125)
+MeshPart23.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+MeshPart23.Size = Vector3.new(2.3179702758789062, 1.9007364511489868, 0.8490753173828125)
+MeshPart23.Anchored = true
+MeshPart23.Material = Enum.Material.Metal
+Sound24.Parent = MeshPart23
+Sound24.Looped = true
+Sound24.MaxDistance = 100
+Sound24.EmitterSize = 30
+Sound24.MinDistance = 30
+Sound24.SoundId = "rbxassetid://405553151"
+Sound24.Volume = 2
+ParticleEmitter25.Name = "Particle"
+ParticleEmitter25.Parent = mas
+ParticleEmitter25.Speed = NumberRange.new(20, 20)
+ParticleEmitter25.Rotation = NumberRange.new(100, 100)
+ParticleEmitter25.Color = ColorSequence.new(Color3.new(1, 0.333333, 0),Color3.new(1, 0, 0))
+ParticleEmitter25.Enabled = false
+ParticleEmitter25.LightEmission = 0.75
+ParticleEmitter25.Texture = "rbxasset://textures/particles/explosion01_implosion_main.dds"
+ParticleEmitter25.Size = NumberSequence.new(0.8125,0.5625,0.4375,0)
+ParticleEmitter25.EmissionDirection = Enum.NormalId.Bottom
+ParticleEmitter25.Lifetime = NumberRange.new(0.07000000029802322, 0.07000000029802322)
+ParticleEmitter25.LockedToPart = true
+ParticleEmitter25.Rate = 500
+ParticleEmitter25.RotSpeed = NumberRange.new(80, 80)
+ParticleEmitter26.Name = "Particle"
+ParticleEmitter26.Parent = mas
+ParticleEmitter26.Speed = NumberRange.new(20, 20)
+ParticleEmitter26.Rotation = NumberRange.new(100, 100)
+ParticleEmitter26.Color = ColorSequence.new(Color3.new(1, 0.333333, 0),Color3.new(1, 0, 0))
+ParticleEmitter26.Enabled = false
+ParticleEmitter26.LightEmission = 0.75
+ParticleEmitter26.Texture = "rbxasset://textures/particles/explosion01_implosion_main.dds"
+ParticleEmitter26.Size = NumberSequence.new(0.8125,0.5625,0.4375,0)
+ParticleEmitter26.EmissionDirection = Enum.NormalId.Bottom
+ParticleEmitter26.Lifetime = NumberRange.new(0.07000000029802322, 0.07000000029802322)
+ParticleEmitter26.LockedToPart = true
+ParticleEmitter26.Rate = 500
+ParticleEmitter26.RotSpeed = NumberRange.new(80, 80)
+MeshPart27.Parent = Model17
+MeshPart27.CFrame = CFrame.new(7.01364136, 0.865333557, -20.515625, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+MeshPart27.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+MeshPart27.Position = Vector3.new(7.013641357421875, 0.8653335571289062, -20.515625)
+MeshPart27.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+MeshPart27.Color = Color3.new(0, 0.12549, 0.376471)
+MeshPart27.Size = Vector3.new(0.6157834529876709, 1.4244062900543213, 0.6893283724784851)
+MeshPart27.Anchored = true
+MeshPart27.BrickColor = BrickColor.new("Navy blue")
+MeshPart27.Material = Enum.Material.Metal
+MeshPart27.brickColor = BrickColor.new("Navy blue")
+MeshPart28.Parent = Model17
+MeshPart28.CFrame = CFrame.new(6.18753052, 1.96318817, -20.5682373, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+MeshPart28.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+MeshPart28.Position = Vector3.new(6.187530517578125, 1.9631881713867188, -20.5682373046875)
+MeshPart28.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+MeshPart28.Color = Color3.new(0.768627, 0.156863, 0.109804)
+MeshPart28.Size = Vector3.new(0.6094865798950195, 0.3777214288711548, 0.39258694648742676)
+MeshPart28.Anchored = true
+MeshPart28.BrickColor = BrickColor.new("Bright red")
+MeshPart28.Material = Enum.Material.Metal
+MeshPart28.brickColor = BrickColor.new("Bright red")
+MeshPart29.Parent = Model17
+MeshPart29.CFrame = CFrame.new(6.2288208, 1.42115021, -20.8696289, -0.998670638, -8.70000367e-05, 0.0515478663, -9.50438043e-05, 1, -0.00015359286, -0.0515478626, -0.000158287963, -0.998670757)
+MeshPart29.Orientation = Vector3.new(0.009999999776482582, 177.0500030517578, -0.009999999776482582)
+MeshPart29.Position = Vector3.new(6.22882080078125, 1.4211502075195312, -20.86962890625)
+MeshPart29.Rotation = Vector3.new(179.99000549316406, 2.950000047683716, 180)
+MeshPart29.Color = Color3.new(0.388235, 0.372549, 0.384314)
+MeshPart29.Size = Vector3.new(0.6549212336540222, 0.6306442022323608, 0.1570710688829422)
+MeshPart29.Anchored = true
+MeshPart29.BrickColor = BrickColor.new("Dark stone grey")
+MeshPart29.Material = Enum.Material.Metal
+MeshPart29.brickColor = BrickColor.new("Dark stone grey")
+MeshPart30.Parent = Model17
+MeshPart30.CFrame = CFrame.new(6.20404053, 0.797393799, -20.8760986, 0.0257090107, -8.70000367e-05, 0.999669492, -0.000155998947, 1, 9.10407252e-05, -0.999669611, -0.000158287963, 0.0257090069)
+MeshPart30.Orientation = Vector3.new(-0.009999999776482582, 88.52999877929688, -0.009999999776482582)
+MeshPart30.Position = Vector3.new(6.20404052734375, 0.797393798828125, -20.8760986328125)
+MeshPart30.Rotation = Vector3.new(-0.20000000298023224, 88.52999877929688, 0.1899999976158142)
+MeshPart30.Color = Color3.new(0.768627, 0.156863, 0.109804)
+MeshPart30.Size = Vector3.new(0.14667974412441254, 0.14933788776397705, 0.4090220630168915)
+MeshPart30.Anchored = true
+MeshPart30.BrickColor = BrickColor.new("Bright red")
+MeshPart30.Material = Enum.Material.Metal
+MeshPart30.brickColor = BrickColor.new("Bright red")
+MeshPart31.Parent = Model17
+MeshPart31.CFrame = CFrame.new(5.42337036, 0.865188599, -20.5565186, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+MeshPart31.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+MeshPart31.Position = Vector3.new(5.423370361328125, 0.8651885986328125, -20.5565185546875)
+MeshPart31.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+MeshPart31.Color = Color3.new(0, 0.12549, 0.376471)
+MeshPart31.Size = Vector3.new(0.6273473501205444, 1.4244062900543213, 0.6893283724784851)
+MeshPart31.Anchored = true
+MeshPart31.BrickColor = BrickColor.new("Navy blue")
+MeshPart31.Material = Enum.Material.Metal
+MeshPart31.brickColor = BrickColor.new("Navy blue")
+Part32.Parent = Model17
+Part32.CFrame = CFrame.new(7.02792358, 1.27524567, -20.9248047, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+Part32.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+Part32.Position = Vector3.new(7.027923583984375, 1.2752456665039062, -20.9248046875)
+Part32.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+Part32.Color = Color3.new(0, 1, 1)
+Part32.Size = Vector3.new(0.08865665644407272, 0.4709922969341278, 0.05396491661667824)
+Part32.Anchored = true
+Part32.BottomSurface = Enum.SurfaceType.Smooth
+Part32.BrickColor = BrickColor.new("Toothpaste")
+Part32.Material = Enum.Material.Neon
+Part32.TopSurface = Enum.SurfaceType.Smooth
+Part32.brickColor = BrickColor.new("Toothpaste")
+Part33.Parent = Model17
+Part33.CFrame = CFrame.new(6.24124146, 1.89474487, -20.5704956, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+Part33.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+Part33.Position = Vector3.new(6.241241455078125, 1.894744873046875, -20.57049560546875)
+Part33.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+Part33.Size = Vector3.new(0.07323810458183289, 0.09636592119932175, 0.40859147906303406)
+Part33.Anchored = true
+Part33.BottomSurface = Enum.SurfaceType.Smooth
+Part33.Material = Enum.Material.Metal
+Part33.TopSurface = Enum.SurfaceType.Smooth
+Part34.Parent = Model17
+Part34.CFrame = CFrame.new(6.18267822, 2.00139618, -20.5736694, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+Part34.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+Part34.Position = Vector3.new(6.18267822265625, 2.0013961791992188, -20.57366943359375)
+Part34.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+Part34.Size = Vector3.new(0.065367192029953, 0.39548635482788086, 0.7283982634544373)
+Part34.Anchored = true
+Part34.BottomSurface = Enum.SurfaceType.Smooth
+Part34.Material = Enum.Material.Metal
+Part34.TopSurface = Enum.SurfaceType.Smooth
+Part34.Shape = Enum.PartType.Cylinder
+Part35.Parent = Model17
+Part35.CFrame = CFrame.new(6.24584961, 1.97344971, -20.5720215, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+Part35.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+Part35.Position = Vector3.new(6.245849609375, 1.97344970703125, -20.572021484375)
+Part35.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+Part35.Size = Vector3.new(0.06922182440757751, 0.38548633456230164, 0.7283982634544373)
+Part35.Anchored = true
+Part35.BottomSurface = Enum.SurfaceType.Smooth
+Part35.Material = Enum.Material.Metal
+Part35.TopSurface = Enum.SurfaceType.Smooth
+Part35.Shape = Enum.PartType.Cylinder
+Part36.Name = "Flame2"
+Part36.Parent = Model17
+Part36.CFrame = CFrame.new(7.01693726, 0.17514801, -20.5129395, -0.0230262727, -0.000826372474, 0.99973464, -0.00246624858, 0.999996722, 0.000769785664, -0.999731958, -0.00244786846, -0.0230282359)
+Part36.Orientation = Vector3.new(-0.03999999910593033, 91.31999969482422, -0.14000000059604645)
+Part36.Position = Vector3.new(7.016937255859375, 0.17514801025390625, -20.512939453125)
+Part36.Rotation = Vector3.new(-178.08999633789062, 88.68000030517578, 177.94000244140625)
+Part36.Transparency = 1
+Part36.Size = Vector3.new(0.30872705578804016, 0.30872705578804016, 0.3087270259857178)
+Part36.Anchored = true
+Part36.BottomSurface = Enum.SurfaceType.Smooth
+Part36.CanCollide = false
+Part36.TopSurface = Enum.SurfaceType.Smooth
+Part36.FormFactor = Enum.FormFactor.Custom
+Part36.formFactor = Enum.FormFactor.Custom
+CylinderMesh37.Parent = Part36
+CylinderMesh37.Scale = Vector3.new(1.100000023841858, 1, 1.100000023841858)
+ParticleEmitter38.Name = "Sparks"
+ParticleEmitter38.Parent = Part36
+ParticleEmitter38.Speed = NumberRange.new(10, 10)
+ParticleEmitter38.Rotation = NumberRange.new(360, 360)
+ParticleEmitter38.Color = ColorSequence.new(Color3.new(1, 0.666667, 0),Color3.new(1, 0.666667, 0))
+ParticleEmitter38.Enabled = false
+ParticleEmitter38.LightEmission = 1
+ParticleEmitter38.Texture = "http://www.roblox.com/asset/?id=244359829"
+ParticleEmitter38.Transparency = NumberSequence.new(0.4000000059604645,0.4000000059604645)
+ParticleEmitter38.Size = NumberSequence.new(0,0.33149123191833496,0)
+ParticleEmitter38.Lifetime = NumberRange.new(0.10000000149011612, 0.5)
+ParticleEmitter38.LockedToPart = true
+ParticleEmitter38.Rate = 5000
+ParticleEmitter38.RotSpeed = NumberRange.new(50, 50)
+ParticleEmitter38.SpreadAngle = Vector2.new(2, 2)
+ParticleEmitter38.VelocitySpread = 2
+ParticleEmitter39.Name = "Fire"
+ParticleEmitter39.Parent = Part36
+ParticleEmitter39.Speed = NumberRange.new(14, 14)
+ParticleEmitter39.Rotation = NumberRange.new(100, 100)
+ParticleEmitter39.Color = ColorSequence.new(Color3.new(1, 0.333333, 0),Color3.new(1, 0, 0))
+ParticleEmitter39.LightEmission = 1
+ParticleEmitter39.LightInfluence = 1
+ParticleEmitter39.Texture = "rbxasset://textures/particles/explosion01_implosion_main.dds"
+ParticleEmitter39.Size = NumberSequence.new(0.8125,0.5625,0.4375,0)
+ParticleEmitter39.EmissionDirection = Enum.NormalId.Bottom
+ParticleEmitter39.Lifetime = NumberRange.new(0.07000000029802322, 0.07000000029802322)
+ParticleEmitter39.LockedToPart = true
+ParticleEmitter39.Rate = 300
+ParticleEmitter39.RotSpeed = NumberRange.new(360, 360)
+MeshPart40.Parent = Model17
+MeshPart40.CFrame = CFrame.new(6.23699951, 1.4287262, -20.9545288, 0.999991536, -0.00386184384, -0.00155595131, 0.00374328834, 0.997533441, -0.0700936839, 0.00182280899, 0.070087254, 0.997539401)
+MeshPart40.Orientation = Vector3.new(4.019999980926514, -0.09000000357627869, 0.2199999988079071)
+MeshPart40.Position = Vector3.new(6.23699951171875, 1.4287261962890625, -20.95452880859375)
+MeshPart40.Rotation = Vector3.new(4.019999980926514, -0.09000000357627869, 0.2199999988079071)
+MeshPart40.Color = Color3.new(0, 1, 1)
+MeshPart40.Size = Vector3.new(0.5680639743804932, 0.47360309958457947, 0.09956277161836624)
+MeshPart40.Anchored = true
+MeshPart40.BrickColor = BrickColor.new("Toothpaste")
+MeshPart40.Material = Enum.Material.Neon
+MeshPart40.brickColor = BrickColor.new("Toothpaste")
+Part41.Parent = Model17
+Part41.CFrame = CFrame.new(6.12405396, 1.97343445, -20.5751343, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+Part41.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+Part41.Position = Vector3.new(6.124053955078125, 1.9734344482421875, -20.57513427734375)
+Part41.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+Part41.Size = Vector3.new(0.06922182440757751, 0.38548633456230164, 0.7283982634544373)
+Part41.Anchored = true
+Part41.BottomSurface = Enum.SurfaceType.Smooth
+Part41.Material = Enum.Material.Metal
+Part41.TopSurface = Enum.SurfaceType.Smooth
+Part41.Shape = Enum.PartType.Cylinder
+Part42.Parent = Model17
+Part42.CFrame = CFrame.new(7.02749634, 1.60043335, -20.9092407, 0.999669492, -0.00423043687, -0.0253587104, 9.10407252e-05, 0.986945152, -0.16105704, 0.0257090069, 0.161001503, 0.986619473)
+Part42.Orientation = Vector3.new(9.270000457763672, -1.4700000286102295, 0.009999999776482582)
+Part42.Position = Vector3.new(7.027496337890625, 1.600433349609375, -20.90924072265625)
+Part42.Rotation = Vector3.new(9.270000457763672, -1.4500000476837158, 0.23999999463558197)
+Part42.Color = Color3.new(0, 1, 1)
+Part42.Size = Vector3.new(0.08865665644407272, 0.1899999976158142, 0.05396491661667824)
+Part42.Anchored = true
+Part42.BottomSurface = Enum.SurfaceType.Smooth
+Part42.BrickColor = BrickColor.new("Toothpaste")
+Part42.Material = Enum.Material.Neon
+Part42.TopSurface = Enum.SurfaceType.Smooth
+Part42.brickColor = BrickColor.new("Toothpaste")
+Part43.Parent = Model17
+Part43.CFrame = CFrame.new(5.40820312, 1.27510071, -20.9664307, 0.999669492, -8.70000367e-05, -0.0257090107, 9.10407252e-05, 1, 0.000155998947, 0.0257090069, -0.000158287963, 0.999669611)
+Part43.Orientation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0.009999999776482582)
+Part43.Position = Vector3.new(5.408203125, 1.2751007080078125, -20.9664306640625)
+Part43.Rotation = Vector3.new(-0.009999999776482582, -1.4700000286102295, 0)
+Part43.Color = Color3.new(0, 1, 1)
+Part43.Size = Vector3.new(0.08865665644407272, 0.4709922969341278, 0.05396491661667824)
+Part43.Anchored = true
+Part43.BottomSurface = Enum.SurfaceType.Smooth
+Part43.BrickColor = BrickColor.new("Toothpaste")
+Part43.Material = Enum.Material.Neon
+Part43.TopSurface = Enum.SurfaceType.Smooth
+Part43.brickColor = BrickColor.new("Toothpaste")
+Part44.Parent = Model17
+Part44.CFrame = CFrame.new(5.40777588, 1.60028839, -20.9508667, 0.999669492, -0.00423043687, -0.0253587104, 9.10407252e-05, 0.986945152, -0.16105704, 0.0257090069, 0.161001503, 0.986619473)
+Part44.Orientation = Vector3.new(9.270000457763672, -1.4700000286102295, 0.009999999776482582)
+Part44.Position = Vector3.new(5.40777587890625, 1.6002883911132812, -20.95086669921875)
+Part44.Rotation = Vector3.new(9.270000457763672, -1.4500000476837158, 0.23999999463558197)
+Part44.Color = Color3.new(0, 1, 1)
+Part44.Size = Vector3.new(0.08865665644407272, 0.1899999976158142, 0.05396491661667824)
+Part44.Anchored = true
+Part44.BottomSurface = Enum.SurfaceType.Smooth
+Part44.BrickColor = BrickColor.new("Toothpaste")
+Part44.Material = Enum.Material.Neon
+Part44.TopSurface = Enum.SurfaceType.Smooth
+Part44.brickColor = BrickColor.new("Toothpaste")
+Part45.Parent = Model17
+Part45.CFrame = CFrame.new(5.85369873, 1.55721283, -20.8085327, -0.905018508, 0.398128062, -0.149785474, 0.309835464, 0.85824877, 0.409159124, 0.291450977, 0.323887736, -0.900085211)
+Part45.Orientation = Vector3.new(-24.149999618530273, -170.5500030517578, 19.850000381469727)
+Part45.Position = Vector3.new(5.85369873046875, 1.5572128295898438, -20.80853271484375)
+Part45.Rotation = Vector3.new(-155.5500030517578, -8.609999656677246, -156.25)
+Part45.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part45.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part45.Anchored = true
+Part45.BottomSurface = Enum.SurfaceType.Smooth
+Part45.BrickColor = BrickColor.new("Gold")
+Part45.Material = Enum.Material.Metal
+Part45.TopSurface = Enum.SurfaceType.Smooth
+Part45.brickColor = BrickColor.new("Gold")
+Part45.FormFactor = Enum.FormFactor.Custom
+Part45.formFactor = Enum.FormFactor.Custom
+CylinderMesh46.Parent = Part45
+CylinderMesh46.Scale = Vector3.new(0.17599999904632568, 1.9535999298095703, 0.17599999904632568)
+Part47.Parent = Model17
+Part47.CFrame = CFrame.new(5.67840576, 1.08443451, -20.8493652, -0.905018508, 0.134341657, -0.403601229, 0.309835464, 0.858289361, -0.409074038, 0.291450977, -0.495269567, -0.818391562)
+Part47.Orientation = Vector3.new(24.149999618530273, -153.75, 19.850000381469727)
+Part47.Position = Vector3.new(5.67840576171875, 1.0844345092773438, -20.849365234375)
+Part47.Rotation = Vector3.new(153.44000244140625, -23.799999237060547, -171.55999755859375)
+Part47.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part47.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part47.Anchored = true
+Part47.BottomSurface = Enum.SurfaceType.Smooth
+Part47.BrickColor = BrickColor.new("Gold")
+Part47.Material = Enum.Material.Metal
+Part47.TopSurface = Enum.SurfaceType.Smooth
+Part47.brickColor = BrickColor.new("Gold")
+Part47.FormFactor = Enum.FormFactor.Custom
+Part47.formFactor = Enum.FormFactor.Custom
+CylinderMesh48.Parent = Part47
+CylinderMesh48.Scale = Vector3.new(0.17599999904632568, 0.1759999841451645, 0.17599999904632568)
+Part49.Parent = Model17
+Part49.CFrame = CFrame.new(5.68597412, 1.12294769, -20.8671265, -0.905018508, 0.196075916, -0.377486318, 0.309835464, 0.911894798, -0.269165337, 0.291450977, -0.360558271, -0.886032999)
+Part49.Orientation = Vector3.new(15.609999656677246, -156.9199981689453, 18.770000457763672)
+Part49.Position = Vector3.new(5.68597412109375, 1.1229476928710938, -20.86712646484375)
+Part49.Rotation = Vector3.new(163.10000610351562, -22.18000030517578, -167.77999877929688)
+Part49.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part49.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part49.Anchored = true
+Part49.BottomSurface = Enum.SurfaceType.Smooth
+Part49.BrickColor = BrickColor.new("Gold")
+Part49.Material = Enum.Material.Metal
+Part49.TopSurface = Enum.SurfaceType.Smooth
+Part49.brickColor = BrickColor.new("Gold")
+Part49.FormFactor = Enum.FormFactor.Custom
+Part49.formFactor = Enum.FormFactor.Custom
+CylinderMesh50.Parent = Part49
+CylinderMesh50.Scale = Vector3.new(0.17599999904632568, 0.1759999841451645, 0.17599999904632568)
+Part51.Parent = Model17
+Part51.CFrame = CFrame.new(5.69561768, 1.16394043, -20.8803711, -0.905018508, 0.228616759, -0.358714461, 0.309835464, 0.932086945, -0.187659338, 0.291450977, -0.280977637, -0.91438961)
+Part51.Orientation = Vector3.new(10.819999694824219, -158.5800018310547, 18.389999389648438)
+Part51.Position = Vector3.new(5.69561767578125, 1.1639404296875, -20.88037109375)
+Part51.Rotation = Vector3.new(168.39999389648438, -21.020000457763672, -165.82000732421875)
+Part51.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part51.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part51.Anchored = true
+Part51.BottomSurface = Enum.SurfaceType.Smooth
+Part51.BrickColor = BrickColor.new("Gold")
+Part51.Material = Enum.Material.Metal
+Part51.TopSurface = Enum.SurfaceType.Smooth
+Part51.brickColor = BrickColor.new("Gold")
+Part51.FormFactor = Enum.FormFactor.Custom
+Part51.formFactor = Enum.FormFactor.Custom
+CylinderMesh52.Parent = Part51
+CylinderMesh52.Scale = Vector3.new(0.17599999904632568, 0.1759999841451645, 0.17599999904632568)
+Part53.Parent = Model17
+Part53.CFrame = CFrame.new(5.70654297, 1.20595551, -20.8900757, -0.905018508, 0.266377479, -0.331639409, 0.309835464, 0.946994185, -0.0848780647, 0.291450977, -0.17956987, -0.939580441)
+Part53.Orientation = Vector3.new(4.869999885559082, -160.55999755859375, 18.1200008392334)
+Part53.Position = Vector3.new(5.70654296875, 1.2059555053710938, -20.89007568359375)
+Part53.Rotation = Vector3.new(174.83999633789062, -19.3700008392334, -163.60000610351562)
+Part53.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part53.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part53.Anchored = true
+Part53.BottomSurface = Enum.SurfaceType.Smooth
+Part53.BrickColor = BrickColor.new("Gold")
+Part53.Material = Enum.Material.Metal
+Part53.TopSurface = Enum.SurfaceType.Smooth
+Part53.brickColor = BrickColor.new("Gold")
+Part53.FormFactor = Enum.FormFactor.Custom
+Part53.formFactor = Enum.FormFactor.Custom
+CylinderMesh54.Parent = Part53
+CylinderMesh54.Scale = Vector3.new(0.17599999904632568, 0.1759999841451645, 0.17599999904632568)
+Part55.Parent = Model17
+Part55.CFrame = CFrame.new(5.71984863, 1.24794006, -20.8955078, -0.905018508, 0.291673332, -0.309626102, 0.309835464, 0.950737417, -0.0100188293, 0.291450977, -0.105000399, -0.950805724)
+Part55.Orientation = Vector3.new(0.5699999928474426, -161.9600067138672, 18.049999237060547)
+Part55.Position = Vector3.new(5.7198486328125, 1.2479400634765625, -20.8955078125)
+Part55.Rotation = Vector3.new(179.39999389648438, -18.040000915527344, -162.13999938964844)
+Part55.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part55.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part55.Anchored = true
+Part55.BottomSurface = Enum.SurfaceType.Smooth
+Part55.BrickColor = BrickColor.new("Gold")
+Part55.Material = Enum.Material.Metal
+Part55.TopSurface = Enum.SurfaceType.Smooth
+Part55.brickColor = BrickColor.new("Gold")
+Part55.FormFactor = Enum.FormFactor.Custom
+Part55.formFactor = Enum.FormFactor.Custom
+CylinderMesh56.Parent = Part55
+CylinderMesh56.Scale = Vector3.new(0.17599999904632568, 0.1759999841451645, 0.17599999904632568)
+Part57.Parent = Model17
+Part57.CFrame = CFrame.new(5.73303223, 1.28890228, -20.897583, -0.905018508, 0.331706405, -0.266294032, 0.309835464, 0.94298017, 0.121616453, 0.291450977, 0.0275578201, -0.956188917)
+Part57.Orientation = Vector3.new(-6.989999771118164, -164.44000244140625, 18.190000534057617)
+Part57.Position = Vector3.new(5.7330322265625, 1.2889022827148438, -20.8975830078125)
+Part57.Rotation = Vector3.new(-172.75, -15.4399995803833, -159.8699951171875)
+Part57.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part57.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part57.Anchored = true
+Part57.BottomSurface = Enum.SurfaceType.Smooth
+Part57.BrickColor = BrickColor.new("Gold")
+Part57.Material = Enum.Material.Metal
+Part57.TopSurface = Enum.SurfaceType.Smooth
+Part57.brickColor = BrickColor.new("Gold")
+Part57.FormFactor = Enum.FormFactor.Custom
+Part57.formFactor = Enum.FormFactor.Custom
+CylinderMesh58.Parent = Part57
+CylinderMesh58.Scale = Vector3.new(0.17599999904632568, 0.1759999841451645, 0.17599999904632568)
+Part59.Parent = Model17
+Part59.CFrame = CFrame.new(5.74710083, 1.3267746, -20.8929443, -0.905018508, 0.37031123, -0.209311426, 0.309835464, 0.911021829, 0.272105366, 0.291450977, 0.181408286, -0.939227223)
+Part59.Orientation = Vector3.new(-15.789999961853027, -167.44000244140625, 18.780000686645508)
+Part59.Position = Vector3.new(5.747100830078125, 1.3267745971679688, -20.8929443359375)
+Part59.Rotation = Vector3.new(-163.83999633789062, -12.079999923706055, -157.75)
+Part59.Color = Color3.new(0.937255, 0.721569, 0.219608)
+Part59.Size = Vector3.new(0.2645644247531891, 0.2645643949508667, 0.2645644247531891)
+Part59.Anchored = true
+Part59.BottomSurface = Enum.SurfaceType.Smooth
+Part59.BrickColor = BrickColor.new("Gold")
+Part59.Material = Enum.Material.Metal
+Part59.TopSurface = Enum.SurfaceType.Smooth
+Part59.brickColor = BrickColor.new("Gold")
+Part59.FormFactor = Enum.FormFactor.Custom
+Part59.formFactor = Enum.FormFactor.Custom
+CylinderMesh60.Parent = Part59
+CylinderMesh60.Scale = Vector3.new(0.17599999904632568, 0.1759999841451645, 0.17599999904632568)
+MeshPart61.Parent = Model17
+MeshPart61.CFrame = CFrame.new(5.42184448, 0.429244995, -20.5615234, -0.0465645231, -8.70000367e-05, -0.998915315, 0.000154065143, 1, -9.42762927e-05, 0.998915434, -0.000158287963, -0.0465645157)
+MeshPart61.Orientation = Vector3.new(0.009999999776482582, -92.66999816894531, 0.009999999776482582)
+MeshPart61.Position = Vector3.new(5.421844482421875, 0.4292449951171875, -20.5615234375)
+MeshPart61.Rotation = Vector3.new(179.8800048828125, -87.33000183105469, 179.88999938964844)
+MeshPart61.Size = Vector3.new(0.5839884281158447, 0.8583614826202393, 0.7772321701049805)
+MeshPart61.Anchored = true
+MeshPart61.Material = Enum.Material.Metal
+MeshPart62.Parent = Model17
+MeshPart62.CFrame = CFrame.new(7.01519775, 0.429389954, -20.5333862, -0.0465645231, -8.70000367e-05, -0.998915315, 0.000154065143, 1, -9.42762927e-05, 0.998915434, -0.000158287963, -0.0465645157)
+MeshPart62.Orientation = Vector3.new(0.009999999776482582, -92.66999816894531, 0.009999999776482582)
+MeshPart62.Position = Vector3.new(7.01519775390625, 0.42938995361328125, -20.53338623046875)
+MeshPart62.Rotation = Vector3.new(179.8800048828125, -87.33000183105469, 179.88999938964844)
+MeshPart62.Size = Vector3.new(0.5839884281158447, 0.8583614826202393, 0.7772321701049805)
+MeshPart62.Anchored = true
+MeshPart62.Material = Enum.Material.Metal
+for i,v in pairs(mas:GetChildren()) do
+	v.Parent = game:GetService("Players").LocalPlayer.Backpack
+	pcall(function() v:MakeJoints() end)
+end
+mas:Destroy()
+for i,v in pairs(cors) do
+	spawn(function()
+		pcall(v)
+	end)
+end
